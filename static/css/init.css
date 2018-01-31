@@ -1,0 +1,52 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+ul,li{
+	list-style: none;
+}
+html,body{
+	font-size: 0.875em;
+}
+button,input,textarea{
+	outline: none;
+	border: none;
+}
+/**flex:1*/
+.flex-1{
+	-webkit-box-flex:1;
+	-webkit-flex:1;
+	-ms-flex:1;
+	flex:1;
+}
+/*display:flex*/
+.flex{
+	display: -webkit-box;
+    display: -moz-box;
+    display:-webkit-flex;
+    display: -ms-flexbox;
+    display:flex;
+}
+/*灰色字体*/
+.font-color-gray{
+	color: #ccc;
+}
+/*圆角*/
+.border-radius-8{
+	border-radius: 8px;
+}
+.padding-left-10{
+	padding-left: 10px;
+}
+/*超出用...显示*/
+.ellipsis{
+	overflow : hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+}
+a{
+	text-decoration: none;
+	color: inherit;
+}

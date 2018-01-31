@@ -1,0 +1,7 @@
+{
+	"targetId":"group_id_one",
+	"conversation":"3",
+	"result":[
+		{"user_id":"user_one","post_time":"12512154263","content":"这是一些文字或者图文消息或者表情"}
+	]
+}
