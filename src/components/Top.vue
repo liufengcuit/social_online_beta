@@ -1,12 +1,29 @@
 <template>
   <div class="top">
-    <el-tabs :tab-position="tabPosition" style="height: 200px;">
-      <el-tab-pane label="用户管理">用户管理</el-tab-pane>
-      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-    </el-tabs>
-    <input type="file" @change="sendImageMsg">
+    生态选择：
+    <el-select v-model="value" filterable placeholder="请选择要进入的生态" @change="changeEcology">
+        <el-option
+          v-for="item in ecologys"
+          :key="item.id"
+          :value="item.id"
+          :label="item.name"
+        >
+        </el-option>
+    </el-select>
+    用户选择：
+    <el-select v-model="loginUser" filterable placeholder="请选择登录用户" @change="changeUser">
+        <el-option
+          v-for="item in ecologyRobot"
+          :key="item.id"
+          :value="item.id"
+          :label="item.username"
+          >
+          <div class="user_list">
+            <p><img :src="item.avatar" alt=""></p>
+            <span>{{ item.username }}</span>
+          </div>
+        </el-option>
+      </el-select>
   </div>
 </template>
 
@@ -15,46 +32,68 @@ export default {
   name: 'top',
   data () {
     return {
-      tabPosition:"top"
+      tabPosition:"top",
+      value:'',
+      ecologys:'',
+      ecologyRobot:{},
+      loginUser:''
     }
   },
   created(){
     this.$api.getEcology().then(res => {
-      console.log(res)
+      this.ecologys = res.data
     });
   },
   methods:{
-    sendImageMsg(){
-    //获取图片
-    var files = document.querySelector('input[type=file]').files[0];
-      if(document.querySelector('input[type=file]').value == ""){
-      alert("请上传图片");
-      return false;
-    }else{
-      if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(document.querySelector('input[type=file]').value)){
-        alert("图片类型必须是.gif,jpeg,jpg,png中的一种")
-        return false;
-      }
-    }
-    var base_img = new FileReader();
-    base_img.readAsDataURL(files);
-    base_img.onload=function(e){
-      var fl = new FormData();
-      // if(files.size>1024*100){
-      //   alert('图片大小超过100KB');
-      //   return false;
-      // }
-      fl.append('file',files);
-      fl.append('module','group');
-      this.$api.upload(fl).then(res => {
-        console.log(res)
+    changeEcology(){
+      /*获取机器人*/
+      this.$api.getRobots({
+        ecology_id:this.value
+      }).then(res => {
+        this.ecologyRobot = res.data;
+        console.log(res.data)
       })
-    }.bind(this)
-  }
+    },
+    /*使用当前用户登录聊天室*/
+    changeUser(value){
+      this.$api.getGroups({
+        uid:value
+      }).then( res => {
+        this.$store.commit('setGroups',res.data)
+        console.log(res);
+      })
+      console.log(value)
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.top{
+  margin: 20px 0 0 20px;
+}
+.user_list{
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .user_list p{
+    display: inline-block;
+    font-size: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .user_list img{
+    width: 100%;
+  }
+  .user_list span{
+    display: inline-block;
+    vertical-align: middle;
+  }
 </style>

@@ -41,9 +41,22 @@
 			</div>
 			<div class="tabs">
 				<!-- 底部菜单选择 -->
-				<div class="tab-bottom">
-					<span>消息</span>
-					<span>联系人</span>
+				<div class="tab-bottom flex">
+					<span class="flex-1" @click="changeTab('1')" :class="{'select-tab': tabIndex==1}">会话</span>
+					<span class="flex-1" @click="changeTab('2')" :class="{'select-tab': tabIndex==2}">群</span>
+					<span class="flex-1" @click="changeTab('3')" :class="{'select-tab': tabIndex==3}">好友</span>
+				</div>
+			</div>
+			<!-- 列表 -->
+			<div class="tab-lists">
+				<div class="tab-list tab-1" v-show="tabIndex ==1">
+					<session-lists></session-lists>
+				</div>
+				<div class="tab-list tab-2" v-show="tabIndex ==2">
+					<contacts-lists></contacts-lists>
+				</div>
+				<div class="tab-list tab-3" v-show="tabIndex ==3">
+					<friends-list :contacts="friends"></friends-list>
 				</div>
 			</div>
 		</div>
@@ -53,19 +66,39 @@
 	</div>
 </template>
 <script>
+	import sessionLists from "./SessionLists.vue"
+	import ContactsLists from "./ContactsLists.vue"
+	import FriendsList from "./FriendsList.vue"
 	export default {
 		name: "MainFrame",
 		data() {
 			return {
 				nums:0,
 				openApplyMsg:false,
-				openlists:false
+				openlists:false,
+				tabIndex:1
+			}
+		},
+		computed:{
+			friends(){
+				let result = this.$store.state.friends;
+				if(result != ''){
+					return result;
+				}
 			}
 		},
 		methods:{
 			searchFriend(){
 
+			},
+			changeTab(index){
+				this.tabIndex = index;
 			}
+		},
+		components:{
+			sessionLists,
+			ContactsLists,
+			FriendsList
 		}
 	}
 </script>
@@ -73,21 +106,24 @@
 	.main-frame{
 		margin: 20px 0 0 20px;
 		position: relative;
+		overflow: hidden;
 	}
 	.menu-list{
 		float: left;
-		height: 850px;
+		height: 900px;
 		width: 220px;
 		box-sizing: border-box;
-		border: 1px solid #dcdfe6
+		border: 1px solid #dcdfe6;
+		overflow: hidden;
 	}
 	.person{
 		height: 100px;
 		border-bottom: 1px solid #ccc;
 		position: relative;
-		background: url(http://or0r5rpd3.bkt.clouddn.com/group/210bb4c0ee9379af82f304bba2722a40acac4e01a47f55838a9d68b12eb88110.jpg) no-repeat left top;
+		background: url(/static/images/74858PICWsx.JPG) no-repeat left top;
 		background-size: 100% 100%;
 		color: #fff;
+		box-sizing: border-box;
 	}
 	.person-head-image{
 		position: absolute;
@@ -135,23 +171,33 @@
 	}
 	.tabs{
 		position: relative;
-		height: 800px;
-		border-bottom: 1px solid #dcdfe6
+		border-bottom: 1px solid #dcdfe6;
+		height: 42px;
+		line-height: 42px;
+		text-align: center;
+		font-size: 14px;
+		box-sizing: border-box;
 	}
 	.tab-bottom{
-		border-top: 1px solid #dcdfe6;
 		position: absolute;
-		bottom: 0;
+		top: 0;
 		left: 0;
 		width: 100%;
 	}
-	.tab-bottom span{
-		float: left;
-		width: 50%;
-		text-align: center;
-		line-height: 32px;
-		font-size: 16px;
+	.tab-bottom span:hover{
+		cursor: default;
 	}
+	.select-tab{
+		color: #409EFF;
+	}
+	.tab-lists{
+		height: 758px;
+		/*background: orange;*/
+		overflow: auto;
+	}
+	::-webkit-scrollbar{width:0px}
+
+
 	.panel{
 		position: absolute;
 		left: 225px;

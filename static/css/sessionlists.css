@@ -1,0 +1,48 @@
+.session-lists .ul{
+	position: relative;
+	width: 100%;
+	padding:10px 10px 20px 10px;
+	box-sizing: border-box;
+}
+.session-lists .ul p{
+	width: 100%;
+	padding-left: 60px;
+	box-sizing: border-box;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.session-head-image{
+	position: absolute;
+	width: 55px;
+	height: 55px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+.session-head-image img{
+	width: 100%;
+}
+.session-title{
+	font-size: 14px;
+	padding-top: 2px;
+}
+.session-content{
+	line-height: 24px;
+	color: #f80;
+}
+.session-unread{
+	position: absolute;
+	right: 20px;
+	bottom: 15px;
+	width: 26px;
+	text-align: center;
+	height: 26px;
+	line-height: 26px;
+	color: #ffffff;
+	font-size: 14px;
+	background: #ff0000;
+	border-radius: 50%;
+	transform: scale(.78);
+}
+.session-select{
+	background: #f1f1f1;
+}

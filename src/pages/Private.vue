@@ -1,12 +1,12 @@
 <template>
-	<div class="groups">
+	<div class="private">
 		<div class="top-bar">
-			<h2>闲聊吧</h2>
-			<p>群简介：休闲娱乐玩耍</p>
+			<h2>好友昵称</h2>
+			<p>个人签名：当流星划过天空</p>
 			<i class="close el-icon-close" title="关闭"></i>
 		</div>
-		<div class="group-content flex">
-			<div class="message flex-1">
+		<div class="group-content">
+			<div class="message">
 				<!-- 消息展示区 -->
 				<div class="message-content">
 					<other-message-type :messages="{'type':'redbag'}"></other-message-type>
@@ -34,19 +34,6 @@
 					<span @click="sendMessage()" class="send-message">发送</span>
 				</div>
 			</div>
-			<!-- 群成员列表 -->
-			<div class="group-member">
-				<div class="group-member-title">
-					<input type="text" placeholder="群成员列表">
-					<i class="el-icon-search"></i>
-				</div>
-				<div class="group-member-container">
-					<div class="group-member-list">
-						<div class="member-head-image"><img src="http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg" alt=""></div>
-						<p>名字名字名字名字名字名字名字名字名字&lt;13545&gt;</p>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -54,14 +41,9 @@
 	import OtherMessageType from '../components/OtherMessageType.vue'
 	import SelfMessageType from '../components/SelfMessageType.vue'
 	export default {
-		name: "Groups",
+		name: "Private",
 		data() {
 			return {}
-		},
-		methods:{
-			sendImageMsg(){
-
-			}
 		},
 		components:{
 		  	OtherMessageType,
@@ -69,8 +51,8 @@
 		}
 	}
 </script>
-<style scoped type="text/css">
-	.groups{
+<style scoped>
+	.private{
 		border: 1px solid #34a1f0;
 		box-sizing: border-box;
 	}
@@ -105,55 +87,5 @@
         background: -moz-linear-gradient(#53aacd,#1f7647);
         background: -mos-linear-gradient(#53aacd,#1f7647);
         background: linear-gradient(#53aacd,#1f7647);
-	}
-
-	.group-member{
-		width: 200px;
-		border-left: 1px solid #34a1f0
-	}
-	.group-member-title{
-		padding: 10px;
-		border-bottom: 1px solid #f0d032;
-		overflow: hidden;
-		box-sizing: border-box;
-	}
-	.group-member-title i{
-		float: right;
-		margin-top: -13px;
-	}
-	.group-member-container{
-		height: 800px;
-		overflow: auto;
-		padding-bottom: 10px;
-		box-sizing: border-box;
-	}
-	.group-member-list{
-		position: relative;
-		padding: 5px;
-		box-sizing: border-box;
-	}
-	.group-member ::-webkit-scrollbar{width:0px}
-	.member-head-image{
-		position: absolute;
-		left: 5px;
-		top: 5px;
-		width: 35px;
-		height: 35px;
-		border-radius: 50%;
-		overflow: hidden;
-		display: inline-block;
-		font-size: 0;
-		vertical-align: middle;
-	}
-	.member-head-image img{
-		width: 100%;
-	}
-	.group-member-list p{
-		font-size: 14px;
-		padding-left: 43px;
-		vertical-align: middle;
-		white-space: nowrap;
-		overflow: hidden;
-		padding-top: 10px;
 	}
 </style>

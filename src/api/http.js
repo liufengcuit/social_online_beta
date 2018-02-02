@@ -6,7 +6,7 @@ export default {
 	get(url, params = {}){
 		return new Promise((resolve, reject) => {
 			params.signString = signString
-			axios.get(host+url, params).then( res => {
+			axios.get(host+url, {params:params}).then( res => {
 				resolve(res.data)
 			}).catch(error => {
 				reject(error)
