@@ -9,26 +9,42 @@
 				</div>
 				<!-- 内容 -->
 				<div class="content-bag">
-					<p class="title">恭喜发财</p>
+					<p class="title">{{ bags.content.des }}</p>
 					<p class="info">领取红包</p>
 				</div>
 			</div>
 			<div class="redbag-bottom">红包</div>
 		</div>
+		<open-bag :bagQualification="bags" v-if="bagSwitch"></open-bag>
 	</div>
 </template>
 <script>
+	import openBag from './OpenBag.vue'
 	export default {
 		name: "BagStyle",
 		data() {
-			return {}
+			return {
+				bagstatus:''
+			}
+		},
+		computed:{
+			bagSwitch(){
+				return this.$store.state.bagStatusView;
+			}
 		},
 		methods:{
 			open(bags){
-
+				if(this.$store.state.bagStatusView){
+					alert("您已经打开了一个红包，请先关闭或领取再点击！");
+					return false;
+				}
+				this.$store.commit("setBagStatusView", true)
 			}
 		},
-		props:['bags']
+		props:['bags'],
+		components:{
+			openBag
+		}
 	}
 </script>
 <style scoped>

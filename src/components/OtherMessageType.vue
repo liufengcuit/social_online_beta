@@ -3,27 +3,28 @@
 		<!-- 头像 -->
 		<div class="head-img">
 			<span class="img">
-				<img src="http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg" alt="">
+				<img :src="messages.head_img" alt="">
 			</span>
-			<span class="username">刘峰</span>
-			<span class="time">2018.02.01</span>
+			<span class="username">{{ messages.username }}</span>
+			<span class="time">{{ messages.post_time | formatDate(messages.post_time) }}</span>
 		</div>
 		<!-- 普通文字显示方式 -->
-		<div class="message-content" v-if="messages.type == 'text'">
-			这里是聊天的内容
+		<div class="message-content" v-if="messages.msg_type == 'text'">
+			{{ messages.content }}
 		</div>
 		<!-- 图片消息显示方式 -->
-		<div class="message-image" v-else-if="messages.type == 'image'">
-			<img @click="previewImage()" src="http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg" alt="">
+		<div class="message-image" v-else-if="messages.msg_type == 'image'">
+			<img @click="previewImage()" :src="messages.content" alt="">
 		</div>
 		<!-- 红包消息显示方式 -->
-		<div class="message-bag" v-else-if="messages.type == 'redbag'">
+		<div class="message-bag" v-else-if="messages.msg_type == 'redbag'">
 			<bag-style :bags="messages"></bag-style>
 		</div>
 	</div>
 </template>
 <script>
 	import bagStyle from './BagStyle.vue'
+	import { formatDate } from '../utils/formatDate'
 	export default {
 		name: "OtherMessageType",
 		data() {
@@ -37,6 +38,11 @@
 		props:['messages'],
 		components:{
 			bagStyle
+		},
+		filters:{
+			formatDate(times){
+				return formatDate(new Date(times * 1000), 'yyyy-MM-dd hh:mm')
+			}
 		}
 	}
 </script>

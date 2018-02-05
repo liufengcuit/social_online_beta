@@ -1,6 +1,7 @@
 export default {
 	/*测试服：x18ywvqfxnioc           正式服：x4vkb1qpx25yk */ 
 	login(token){
+		console.log(token)
 		RongIMLib.RongIMClient.init("x18ywvqfxnioc");
 		// 设置连接监听状态 （ status 标识当前连接状态 ）
 		// 连接状态监听器
@@ -109,5 +110,8 @@ export default {
 		var messageTagContactNtf = new RongIMLib.MessageTag(true,true);
 		var propertysContactNtf = ["extra","message","operation","sourceUserId","targetUserId","user"];
 		RongIMClient.registerMessageType(messageNameContactNtf,objectNameContactNtf,messageTagContactNtf,propertysContactNtf);
-	}
+	},
+
+	/*接收消息*/
+	
 }

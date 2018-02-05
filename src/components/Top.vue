@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import init from '../rong/config.js'
+import message from '../rong/message.js'
 export default {
   name: 'top',
   data () {
@@ -51,18 +53,30 @@ export default {
         ecology_id:this.value
       }).then(res => {
         this.ecologyRobot = res.data;
+        this.$store.commit("setRobots", res.data);
         console.log(res.data)
       })
     },
     /*使用当前用户登录聊天室*/
     changeUser(value){
+      let robots = this.$store.state.robots;
+      let current;
+      for(var i =0, len = robots.length; i < len; i++){
+        if(robots[i].id == value){
+          current = robots[i];
+          this.$store.commit("setLoginUser", robots[i]);
+          break;
+        }
+      }
+      /*登录融云*/
+      init.login(current.rong_token);
+      message.receiveMessages()
       this.$api.getGroups({
         uid:value
       }).then( res => {
         this.$store.commit('setGroups',res.data)
         console.log(res);
       })
-      console.log(value)
     }
   }
 }

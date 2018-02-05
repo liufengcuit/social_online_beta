@@ -1,8 +1,24 @@
 export default {
 	/*记录当前登录用户*/
 	login_user:'',
+	/*当前聊天类型*/
+	curr_chat_type:'',
+	/*所有机器人*/
+	robots:'',
 	/*当前用户加入的群*/
 	groups:'',
 	/*当前用户的好友*/
-	friends:''
+	friends:'',
+	/*当前选择的聊天群*/
+	active_group:'',
+	/*当前选择的聊天好友*/
+	active_friend:'',
+	/*创建红包状态*/
+	bagStatus:false,
+	/*群组消息*/
+	msg_group:[],
+	/*好友消息*/
+	msg_friends:[],
+	/*抢红包界面*/
+	bagStatusView:''
 }

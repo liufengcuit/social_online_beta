@@ -10,7 +10,7 @@
 			<div class="ul"
 				v-for="(contact,$index) in groups"
 				:key="$index"
-				@click="changeSelect($index)"
+				@click="changeSelect($index, contact)"
 				:class="{'contact-selected': $index == contactIndex}"
 			>
 				<div class="contact-image">
@@ -45,9 +45,11 @@
 			}
 		},
 		methods:{
-			changeSelect(index){
+			changeSelect(index, contact){
 				this.contactIndex = index;
-				this.$router.push("/group")
+				this.$router.push("/group");
+				this.$store.commit("set_active_group", contact);
+				this.$store.commit("setCurrChatType", 3)
 			},
 			fastSearch(){
 				console.log(this.contacts)
@@ -118,5 +120,6 @@
 		width: 100%;
     	box-sizing: border-box;
     	height: 36px;
+    	border-bottom: 1px solid #dcdfe6;
 	}
 </style>

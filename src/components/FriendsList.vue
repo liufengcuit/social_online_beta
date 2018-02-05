@@ -10,7 +10,7 @@
 			<div class="ul"
 				v-for="(contact,$index) in groups"
 				:key="$index"
-				@click="changeSelect($index)"
+				@click="changeSelect($index, contact)"
 				:class="{'contact-selected': $index == contactIndex}"
 			>
 				<div class="contact-image">
@@ -45,8 +45,10 @@
 			}
 		},
 		methods:{
-			changeSelect(index){
+			changeSelect(index, contact){
 				this.contactIndex = index;
+				this.$store.commit("setCurrChatType",1)
+				console.log(contact)
 			},
 			fastSearch(){
 				console.log(this.contacts)

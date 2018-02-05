@@ -33,6 +33,10 @@ export default {
 	async kickUser(params){
 		return http.get("/marsmob.php?r=rong/kick-user", params);
 	},
+	/*获取某个人的可提现金额*/
+	async getUserWithdraw(params){
+		return http.get("/marsmob.php?r=rong/get-user-withdraw", params)
+	},
 
 
 	/*
@@ -70,7 +74,7 @@ export default {
 
 	/*发红包接口*/
 	async create(params){
-		return http.post("v1/packet/create", params)
+		return http.post("/v1/packet/create", params)
 	},
 	/*红包支付*/
 	async payfor(params){

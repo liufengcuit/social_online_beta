@@ -8,22 +8,23 @@
 						placement="right"
 						width="200"
 						trigger="hover"
+						@show="getUserInfo(loginUser.id)"
 						>
 						<template>
 						<div style="padding:10px">
-						<p class="content_img"><img src="http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg"></p>
-						<p><strong>姓名：</strong>godlike</p>
-						<p><strong>ID：</strong>132</p>
-						<p><strong>会员类型：</strong><span>非会员</span></p>
-						<p><strong>性别：</strong><span>男</span></p>
-						<p><strong>红包余额：</strong>12 ¥</p>
+						<p class="content_img"><img :src="loginUser.avatar"></p>
+						<p><strong>姓名：</strong>{{ loginUser.username }}</p>
+						<p><strong>ID：</strong>{{ loginUser.id }}</p>
+						<p><strong>会员类型：</strong><span>{{ loginUser.vip_level | vipName(loginUser.vip_level) }}</span></p>
+						<p><strong>性别：</strong><span v-if="loginUser.gender==0">女</span><span v-else>男</span></p>
+						<p><strong>红包余额：</strong><i v-if="withdraw < 0" class="el-icon-loading"></i><span v-else v-text="withdraw"></span> ¥</p>
 						</div>
 						</template>
-						<img slot="reference" src="http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg" alt="" class="curr_user_img"></el-button>
+						<img slot="reference" :src="loginUser.avatar" alt="" class="curr_user_img"></el-button>
 					</el-popover>
 				</div>
-				<p class="person-username">名字名字名字名字名字名字名字</p>
-				<span class="level">会员等级：黄金VIP</span>
+				<p class="person-username">{{ loginUser.username }}</p>
+				<span class="level">会员等级：{{ loginUser.vip_level | vipName(loginUser.vip_level) }}</span>
 				<p class="tools flex">
 					<span class="flex-1">
 						新消息：
@@ -69,6 +70,13 @@
 	import sessionLists from "./SessionLists.vue"
 	import ContactsLists from "./ContactsLists.vue"
 	import FriendsList from "./FriendsList.vue"
+
+	let vip_level = [
+		{ key:0, value:'非会员' },
+		{ key:1, value:'黄金VIP' },
+		{ key:2, value:'铂金VIP' }
+	]
+
 	export default {
 		name: "MainFrame",
 		data() {
@@ -76,7 +84,8 @@
 				nums:0,
 				openApplyMsg:false,
 				openlists:false,
-				tabIndex:1
+				tabIndex:1,
+				withdraw:''
 			}
 		},
 		computed:{
@@ -85,6 +94,9 @@
 				if(result != ''){
 					return result;
 				}
+			},
+			loginUser(){
+				return this.$store.state.login_user;
 			}
 		},
 		methods:{
@@ -93,12 +105,30 @@
 			},
 			changeTab(index){
 				this.tabIndex = index;
+			},
+			getUserInfo(uid){
+				this.withdraw = '';
+				this.$api.getUserWithdraw({
+					uid:uid
+				}).then(result => {
+					this.withdraw = result.data;
+				})
 			}
 		},
 		components:{
 			sessionLists,
 			ContactsLists,
 			FriendsList
+		},
+		filters:{
+			vipName(vipLevel){
+				for(var i in vip_level){
+					if(vip_level[i].key == vipLevel){
+						return vip_level[i].value
+					}
+				};
+				return vipLevel;
+			}
 		}
 	}
 </script>
