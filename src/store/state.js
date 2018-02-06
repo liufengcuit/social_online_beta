@@ -20,5 +20,7 @@ export default {
 	/*好友消息*/
 	msg_friends:[],
 	/*抢红包界面*/
-	bagStatusView:''
+	bagStatusView:'',
+	/*emoji界面*/
+	emojiView:false
 }

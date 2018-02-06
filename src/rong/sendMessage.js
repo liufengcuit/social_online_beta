@@ -1,5 +1,8 @@
 import vuexDatas from '../store/index'
 import hande_state from './handle-state.js'
+import api from '../api/index.js'
+import { Message } from 'element-ui'
+
 export default {
 	sendTextMsg:(data)=>{
 		var msg;
@@ -29,79 +32,73 @@ export default {
 	},
 	sendImageMsg(){
 		//获取图片
-		// var files = document.querySelector('input[type=file]').files[0];
-		// 	if(document.querySelector('input[type=file]').value == ""){
-		// 	alert("请上传图片");
-		// 	return false;
-		// }else{
-		// 	if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(document.querySelector('input[type=file]').value)){
-		// 	  alert("图片类型必须是.gif,jpeg,jpg,png中的一种")
-		// 	  return false;
-		// 	}
-		// }
-		// var base_img = new FileReader();
-		// base_img.readAsDataURL(files);
-		// base_img.onload=function(e){
-		// 	var fl = new FormData();
-		// 	fl.append('file',files);
-		// 	fl.append('signString',signString);
-		// 	fl.append('module','group');
-		// 	var xhr = new XMLHttpRequest();
-		// 	xhr.open('POST','http://social.haboai120.com/v1/upload/image',true);
-		// 	xhr.send(fl);
-		// 	xhr.onreadystatechange=function(){
-		// 		if(xhr.status==200 && xhr.readyState==4){
-		// 			//data:image/png;base64,
-		// 			console.log(xhr.responseText)
-		// 			var arr = files.name.split('.');
-		// 			var imgBaseUri = e.target.result.split(",")[1];
-		// 			var msg;
+		var files = document.querySelector('input[type=file]').files[0];
+			if(document.querySelector('input[type=file]').value == ""){
+			alert("请上传图片");
+			return false;
+		}else{
+			if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(document.querySelector('input[type=file]').value)){
+			  alert("图片类型必须是.gif,jpeg,jpg,png中的一种")
+			  return false;
+			}
+		}
+		var base_img = new FileReader();
+		base_img.readAsDataURL(files);
+		base_img.onload=function(e){
+			var fl = new FormData();
+			fl.append('file',files);
+			fl.append('signString',signString);
+			fl.append('module','group');
+			api.upload(fl).then(result => {
+				console.log(result);
+				var arr = files.name.split('.');
+				var imgBaseUri = e.target.result.split(",")[1];
+				var msg;
 
-		// 			//
-		// 			var curr_chat_type = store.state.curr_chat_type;
-		// 			var targetId;
-		// 			var curr_chat;
+				//
+				var curr_chat_type = vuexDatas.state.curr_chat_type;
+				var targetId;
+				var curr_chat;
 
-		// 			if(curr_chat_type == 1){
-		// 				curr_chat = store.state.curr_chat_friends
-		// 				targetId = curr_chat.id.toString();  //目标ID
-		// 			}else if(curr_chat_type == 3){
-		// 				curr_chat = store.state.curr_chat_group
-		// 				targetId = curr_chat.group_id.toString();  //目标ID
-		// 			}
-		// 			//发送消息
-		// 			if(arr[(arr.length-1)].toLowerCase() == 'gif'){
-		// 				msg = new RongIMClient.RegisterMessage.GifMessage({
-		// 					messageName:"GifMessage",
-		// 					url:JSON.parse(xhr.responseText).data.url,
-		// 					id:store.state.curr_login_user.id,
-		// 					name:store.state.curr_login_user.username,
-		// 					portraitUri:store.state.curr_login_user.avatar,
-		// 					message:{
-		// 						content:{
-		// 							id:store.state.curr_login_user.id,
-		// 							name:store.state.curr_login_user.username,
-		// 							portraitUri:store.state.curr_login_user.avatar,
-		// 							url:JSON.parse(xhr.responseText).data.url
-		// 						}
-		// 					}
-		// 				});
-		// 			}else{
-		// 				msg = new RongIMLib.ImageMessage({
-		// 					content:imgBaseUri,
-		// 					imageUri:JSON.parse(xhr.responseText).data.url,
-		// 					messageName:'ImageMessage',
-		// 					user:{
-		// 						id:store.state.curr_login_user.id,
-		// 						name:store.state.curr_login_user.username,
-		// 						portrait:store.state.curr_login_user.avatar
-		// 					}
-		// 				});
-		// 			}
-		// 			sendSuccessMessage(curr_chat_type, targetId, msg);
-		// 		}
-		// 	}.bind(this)
-		// }.bind(this)
+				if(curr_chat_type == 1){
+					curr_chat = vuexDatas.state.active_friend
+					targetId = curr_chat.id.toString();  //目标ID
+				}else if(curr_chat_type == 3){
+					curr_chat = vuexDatas.state.active_group
+					targetId = curr_chat.group_id.toString();  //目标ID
+				}
+				//发送消息
+				if(arr[(arr.length-1)].toLowerCase() == 'gif'){
+					msg = new RongIMClient.RegisterMessage.GifMessage({
+						messageName:"GifMessage",
+						url:result.data.url,
+						id:vuexDatas.state.login_user.id,
+						name:vuexDatas.state.login_user.username,
+						portraitUri:vuexDatas.state.login_user.avatar,
+						message:{
+							content:{
+								id:vuexDatas.state.login_user.id,
+								name:vuexDatas.state.login_user.username,
+								portraitUri:vuexDatas.state.login_user.avatar,
+								url:result.data.url
+							}
+						}
+					});
+				}else{
+					msg = new RongIMLib.ImageMessage({
+						content:imgBaseUri,
+						imageUri:result.data.url,
+						messageName:'ImageMessage',
+						user:{
+							id:vuexDatas.state.login_user.id,
+							name:vuexDatas.state.login_user.username,
+							portrait:vuexDatas.state.login_user.avatar
+						}
+					});
+				}
+				sendSuccessMessage(curr_chat_type, targetId, msg);
+			})
+		}.bind(this)
 	}
 }
 
@@ -144,7 +141,9 @@ function sendSuccessMessage(conversationtype, targetId, msg){
 	                info = '发生了其它错误';
 	                break;
 	        }
-	        alert(info);
+	        // alert(info);
+	        Message.error(info)
+	        
 	        console.log('发送失败:' + info);
 	    }
 	});

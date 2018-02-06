@@ -2,16 +2,30 @@
 	<div class="other-message-type">
 		<!-- 头像 -->
 		<div class="head-img">
-			<span class="img">
-				<img :src="messages.head_img" alt="">
-			</span>
+			
+			<el-popover
+				placement="right"
+				width="200"
+				trigger="hover"
+				@show="getUserInfos(messages.id)"
+				>
+				<template>
+				<div style="padding:10px">
+				<p class="content_img"><img :src="messages.head_img"></p>
+				<p><strong>姓名：</strong>{{ messages.username }}</p>
+				<p><strong>ID：</strong>{{ messages.id }}</p>
+				<p><strong>红包余额：</strong><i v-if="withdraw < 0" class="el-icon-loading"></i><span v-else v-text="withdraw"></span> ¥</p>
+				</div>
+				</template>
+				<span class="img" slot="reference">
+					<img :src="messages.head_img" alt="">
+				</span>
+			</el-popover>
 			<span class="username">{{ messages.username }}</span>
 			<span class="time">{{ messages.post_time | formatDate(messages.post_time) }}</span>
 		</div>
 		<!-- 普通文字显示方式 -->
-		<div class="message-content" v-if="messages.msg_type == 'text'">
-			{{ messages.content }}
-		</div>
+		<div class="message-content" v-if="messages.msg_type == 'text'" v-html="messages.content"></div>
 		<!-- 图片消息显示方式 -->
 		<div class="message-image" v-else-if="messages.msg_type == 'image'">
 			<img @click="previewImage()" :src="messages.content" alt="">
@@ -28,11 +42,22 @@
 	export default {
 		name: "OtherMessageType",
 		data() {
-			return {}
+			return {
+				withdraw:0,
+				result:{}
+			}
 		},
 		methods:{
 			previewImage(url){
 
+			},
+			getUserInfos(uid){
+				/*获取红包余额*/
+				this.$api.getUserWithdraw({
+					uid:uid
+				}).then(result => {
+					this.withdraw = result.data;
+				})
 			}
 		},
 		props:['messages'],
@@ -111,6 +136,10 @@
 	.message-bag{
 		margin-top: 10px;
 		margin-left: 30px;
+	}
+	.content_img img{
+		max-width: 160px;
+		max-height: 160px;
 	}
 	
 </style>

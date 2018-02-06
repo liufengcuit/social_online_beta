@@ -40,5 +40,9 @@ export default {
 	/*设置红包拆红包界面状态*/
 	setBagStatusView(state, payload){
 		state.bagStatusView = payload;
+	},
+	/*设置表情界面状态*/
+	setEmojiView(state, payload){
+		state.emojiView = payload;
 	}
 }

@@ -77,6 +77,7 @@
 	.lists-content{
 		height: 722px;
 		overflow: auto;
+		background: #2db7f5;
 	}
 	.contact-lists .ul{
 		position: relative;
@@ -108,8 +109,8 @@
 		overflow: hidden;
 	}
 	.contact-lists .contact-selected{
-		background: #f2f2f2;
-		color: #409EFF;
+		background: #70c7fd;
+		color: #fff;
 	}
 	.el-icon-search{
 		font-size: 15px;

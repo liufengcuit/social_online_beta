@@ -160,10 +160,12 @@ export default {
 				}
 
 				break;
-			//红包提示消息ContactNtf
+			//红包提示消息RedTips
 			case RongIMClient.MessageType.RedTips:
 				obj.content = message.content;
-				obj.msg_type= 'redtips';
+				obj.type= {
+					special: 'redtips'
+				};
 				if(message.conversationType == 1){
 					Msg = store.state.msg_friends;
 				}else{
@@ -192,6 +194,33 @@ export default {
 				window.localStorage.setItem("newmsg",value);
 				store.commit("set_apply_msg",value);
 				break;
+			//退群消息
+			case RongIMClient.MessageType.GrpNtf:
+				console.log(message);
+				obj.content = message.content.data.operatorNickname + message.content.data.message + message.content.data.targetUserDisplayNames[0];
+				obj.type= {
+					special: 'out'
+				};
+				if(message.conversationType == 1){
+					Msg = store.state.msg_friends;
+				}else{
+				  	Msg = store.state.msg_group;
+				}
+				for(var i=0,len=Msg.length;i<len;i++){
+				  	if(message.targetId==Msg[i].targetId){
+				  		Msg[i].result.push(obj);
+				  	}
+				}
+				if(message.conversationType == 1){
+				  	store.commit("set_msg_friends",Msg);
+				}else{
+					store.commit("set_msg_group",Msg);
+				}
+				break;
+			/*提示条通知消息*/
+			case RongIMClient.MessageType.InfoNtf:
+				console.log(message);
+			break;
 			default:
 			  // do something...
 			  console.log("其它消息")

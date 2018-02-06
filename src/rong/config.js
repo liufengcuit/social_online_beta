@@ -1,3 +1,4 @@
+import { Notification } from 'element-ui';
 export default {
 	/*测试服：x18ywvqfxnioc           正式服：x4vkb1qpx25yk */ 
 	login(token){
@@ -18,7 +19,12 @@ export default {
 						console.log('断开连接');
 					break;
 					case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
-						console.log('其他设备登录');
+						Notification({
+				        	title: '提示',
+				        	type: 'warning',
+				        	message: '其他设备登录',
+				        	duration: 0
+				        });
 					break;
 					case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
 						console.log('域名不正确');
@@ -45,7 +51,12 @@ export default {
 							rate: [100, 1000, 3000, 6000, 10000]
 						};
 						RongIMClient.reconnect(callback, config);
-						console.log('网络不可用');
+						Notification({
+				        	title: '提示',
+				        	type:'error',
+				        	message: '网络不可用',
+				        	duration: 0
+				        });
 					break;
 				}
 			}
@@ -110,8 +121,5 @@ export default {
 		var messageTagContactNtf = new RongIMLib.MessageTag(true,true);
 		var propertysContactNtf = ["extra","message","operation","sourceUserId","targetUserId","user"];
 		RongIMClient.registerMessageType(messageNameContactNtf,objectNameContactNtf,messageTagContactNtf,propertysContactNtf);
-	},
-
-	/*接收消息*/
-	
+	}
 }

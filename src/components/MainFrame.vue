@@ -20,7 +20,7 @@
 						<p><strong>红包余额：</strong><i v-if="withdraw < 0" class="el-icon-loading"></i><span v-else v-text="withdraw"></span> ¥</p>
 						</div>
 						</template>
-						<img slot="reference" :src="loginUser.avatar" alt="" class="curr_user_img"></el-button>
+						<img slot="reference" :src="loginUser.avatar" alt="" class="curr_user_img">
 					</el-popover>
 				</div>
 				<p class="person-username">{{ loginUser.username }}</p>

@@ -10,9 +10,7 @@
 			</p>
 		</div>
 		<!-- 普通文字消息 -->
-		<div class="message-content" v-if="messages.msg_type == 'text'">
-			{{ messages.content }}
-		</div>
+		<div class="message-content" v-if="messages.msg_type == 'text'" v-html="messages.content"></div>
 		<!-- 图片消息显示方式 -->
 		<div class="message-image" v-else-if="messages.msg_type == 'image'">
 			<img @click="previewImage()" :src="messages.content" alt="">

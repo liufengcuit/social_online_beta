@@ -7,7 +7,6 @@
 		<!-- <div class="look">查看大家的手气</div> -->
 		<div class="details"
 			v-show="details">
-			{{ bagQualification }}
 			<div class="titles">领取详情</div>
 			<div 
 				class="ul"
@@ -42,8 +41,8 @@
 			<div class="close-open-bag"><span title="关闭" @click="close()">关闭</span></div>
 		</div>
 		<!-- 第一次点击显示时状态 -->
-<!-- 		<div class="status1">
-			<div class="circle" @click="openbag()" >{{  }}</div>
+		<div class="status1" v-if="bagstatus == 1">
+			<div class="circle" @click="openbag()">拆红包</div>
 		</div>
 		<div class="status1" v-else-if="bagstatus == 2">
 			<p class="content">红包已过期</p>
@@ -64,7 +63,11 @@
 		</div>
 		<div class="status1" v-else-if="bagstatus == 7">
 			<p class="content">消耗积分</p>
-		</div> -->
+		</div>
+		<div class="status1" v-else-if="bagstatus == 8">
+			<p class="content">自己的红包</p>
+			<p class="looks" @click="opendetails()">查看领取详情</p>
+		</div>
 	</div>
 </template>
 <script>
@@ -83,91 +86,68 @@
 			return {
 				details:false,
 				openstatus:'',
+				bag_status:'',
 				self_id:'',
 				bags:null,
 				bagsender:'',
-				loading:true
+				loading:true,
+				bagstatus:1
 			}
 		},
 		created(){
 			this.self_id = this.$store.state.login_user.id;
 			console.log(this.bagQualification)
+			this.snatch();
 		},
 		computed:{
 			loadingbag(){
 				// return this.$store.state
-			},
-			/*获取红包领取状态*/
-			bag_status(){
-				if(this.$store.state.bag_status){
-					return this.$store.state.bag_status;
-				}
 			}
 		},
 		methods:{
+			/*先抢红包*/
+			snatch(){
+				this.$api.snatch({
+					token:this.$store.state.login_user.token,
+					id:this.bagQualification.rid,
+					is_agree:true
+				}).then(result => {
+					this.bagstatus = result.data
+				})
+			},
+			/*再打开红包*/
 			openbag:function(){
 				var parms = {
 					token:this.$store.state.login_user.token,
-					id:bagQualification.content.rid,
+					id:this.bagQualification.rid,
 					is_agree:true
 				}
-				this.open(parms);
 				this.details = true;
+				this.$api.bagOpen(parms).then(result => {
+					this.openstatus = result.data;
+					this.opendetails();
+				})
 			},
 			close:function(){
-				this.$store.commit("setBagStatusView", false);
-			},
-			/*开红包*/
-			open:function(parms){
-				this.$api.bagOpen(parms).then(result => {
-					console.log(result);
-					switch (result.data.data){
-						// case 1:
-						// 	let r1 = await getData("http://social.haboai120.com/v1/packet/log",parms,"post");
-						// 	this.$store.commit("set_bag_status",r1.data.data.list);
-						// 	this.bagsender = r1.data.data.info.username
-						// 	this.bags = '共'+r1.data.data.info.label;
-						// 	this.openstatus = 1;
-						// 	this.loading = false;
-						// break;
-						// case 2:
-						// console.log("res.data.data")
-						// 	let r2 = await getData("http://social.haboai120.com/v1/packet/log",parms,"post");
-						// 	this.$store.commit("set_bag_status",r2.data.data.list);
-						// 	this.bagsender = r2.data.data.info.username
-						// 	this.bags = '共'+r2.data.data.info.label;
-						// 	this.openstatus = 2;
-						// 	this.loading = false;
-						// break;
-						// case 4:
-						// 	this.openstatus = 4;
-						// 	this.loading = false;
-						// break;
-						// default:
-						// 	this.loading = false;
-						// break;
-					}
-				})
-				
+				this.$emit("bagStatus", false)
 			},
 			/*查看领取详情*/
 			opendetails:function(){
-				var parms = {
-					token:this.$store.state.curr_login_user.token,
-					signString:signString,
-					id:this.bagid
-				}
-				this._status(parms);
-			},
-			_status:async function(parms){
 				this.details = true;
-				let r3 = await getData("http://social.haboai120.com/v1/packet/log",parms,"post");
-				this.bagsender = r3.data.data.info.username
-				this.bags = '共'+r3.data.data.info.label;
-				this.$store.commit("set_bag_status",r3.data.data.list);
-				this.openstatus = 1;
-				this.loading = false;
-				
+				var parms = {
+					token:this.$store.state.login_user.token,
+					id:this.bagQualification.rid
+				}
+				this.$api.bagLog(parms).then(result => {
+					console.log(result)
+					if(result.code == 0){
+						this.openstatus = 1;
+						this.bagsender = result.data.info.username
+						this.bags = '共'+ result.data.info.label;
+						this.bag_status = result.data.list;
+						this.loading = false;
+					}
+				})
 			}
 		},
 		props:['bagQualification'],

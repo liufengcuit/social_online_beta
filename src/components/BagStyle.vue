@@ -1,6 +1,6 @@
 <template>
 	<div class="bag-style">
-		<div class="redbag" @click="open(bags)">
+		<div class="redbag" @click="open(bags.content)">
 			<div class="redbag-top">
 				<div class="bag">
 					<div class="top"></div>
@@ -15,7 +15,7 @@
 			</div>
 			<div class="redbag-bottom">红包</div>
 		</div>
-		<open-bag :bagQualification="bags" v-if="bagSwitch"></open-bag>
+		<open-bag :bagQualification="selectBag" v-if="bagSwitch" v-on:bagStatus="controBagView"></open-bag>
 	</div>
 </template>
 <script>
@@ -24,21 +24,24 @@
 		name: "BagStyle",
 		data() {
 			return {
-				bagstatus:''
-			}
-		},
-		computed:{
-			bagSwitch(){
-				return this.$store.state.bagStatusView;
+				bagstatus:'',
+				selectBag:'',
+				bagSwitch:false
 			}
 		},
 		methods:{
 			open(bags){
+				this.selectBag = bags;
 				if(this.$store.state.bagStatusView){
 					alert("您已经打开了一个红包，请先关闭或领取再点击！");
 					return false;
 				}
-				this.$store.commit("setBagStatusView", true)
+				this.bagSwitch = true;
+				this.$store.commit("setBagStatusView", true);
+			},
+			controBagView(status){
+				this.bagSwitch = status;
+				this.$store.commit("setBagStatusView", false);
 			}
 		},
 		props:['bags'],

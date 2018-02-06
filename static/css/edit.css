@@ -4,7 +4,6 @@
 .message-send{
 	position: relative;
 	height: 130px;
-	overflow: hidden;
 }
 .message-type span{
 	display: inline-block;
