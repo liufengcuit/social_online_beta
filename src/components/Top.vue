@@ -65,6 +65,7 @@ export default {
         if(robots[i].id == value){
           current = robots[i];
           this.$store.commit("setLoginUser", robots[i]);
+          this.$store.dispatch("initVuex")
           break;
         }
       }
@@ -75,6 +76,7 @@ export default {
         uid:value
       }).then( res => {
         this.$store.commit('setGroups',res.data)
+        this.$router.push("/")
         console.log(res);
       })
     }

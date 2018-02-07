@@ -68,6 +68,9 @@
 			<p class="content">自己的红包</p>
 			<p class="looks" @click="opendetails()">查看领取详情</p>
 		</div>
+		<div class="status1" v-else-if="bagstatus == 9">
+			<p class="content">红包状态判断中</p>
+		</div>
 	</div>
 </template>
 <script>
@@ -91,7 +94,7 @@
 				bags:null,
 				bagsender:'',
 				loading:true,
-				bagstatus:1
+				bagstatus:9
 			}
 		},
 		created(){
@@ -139,8 +142,12 @@
 					id:this.bagQualification.rid
 				}
 				this.$api.bagLog(parms).then(result => {
-					console.log(result)
 					if(result.code == 0){
+						if(result.data.length == 0){
+							this.loading = false;
+							this.bagsender = '您的红包暂时还没人领取'
+							return 
+						}
 						this.openstatus = 1;
 						this.bagsender = result.data.info.username
 						this.bags = '共'+ result.data.info.label;

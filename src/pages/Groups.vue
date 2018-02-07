@@ -80,6 +80,7 @@
 	import sendMessage from '../rong/sendMessage.js'
 	import Emoji from '../components/Emoji.vue'
 	import SpecialMessage from '../components/SpecialMessage.vue'
+	import autoBottom from '../utils/autoBottom.js'
 	export default {
 		name: "Groups",
 		data() {
@@ -213,6 +214,9 @@
 			group(newVal, oldVal){
 				this.getMembers(newVal.group_id);
 			}
+		},
+		mounted(){
+			autoBottom.autoBottom(document.querySelector(".message-content"))
 		}
 	}
 </script>
@@ -260,7 +264,7 @@
 	}
 	.group-member-title{
 		padding: 10px;
-		border-bottom: 1px solid #f0d032;
+		border-bottom: 1px solid #1593b3;
 		overflow: hidden;
 		box-sizing: border-box;
 	}

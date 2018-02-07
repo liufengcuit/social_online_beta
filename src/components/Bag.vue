@@ -121,6 +121,10 @@
 							}else{
 								this.$store.commit('set_bag_status',false);
 							}
+						}).catch(error => {
+							console.log(error);
+							this.$store.commit('set_bag_status',false);
+							this.loading = false;
 						});
 						
 					}else{

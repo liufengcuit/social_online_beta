@@ -1,6 +1,9 @@
 import axios from 'axios'
 
 const host = "http://social.haboai120.com"
+// console.log(axios.defaults)
+/*设置默认请求时间为10s*/
+axios.defaults.timeout = 10000;
 
 export default {
 	get(url, params = {}){

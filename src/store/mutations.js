@@ -44,5 +44,9 @@ export default {
 	/*设置表情界面状态*/
 	setEmojiView(state, payload){
 		state.emojiView = payload;
+	},
+	/*保存聊天消息*/
+	saveChatMessage(state, payload){
+		state.messages = payload;
 	}
 }

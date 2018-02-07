@@ -194,13 +194,14 @@ export default {
 				window.localStorage.setItem("newmsg",value);
 				store.commit("set_apply_msg",value);
 				break;
-			//退群消息
-			case RongIMClient.MessageType.GrpNtf:
+			//群组通知消息
+			case RongIMClient.MessageType.GroupNotificationMessage:
 				console.log(message);
-				obj.content = message.content.data.operatorNickname + message.content.data.message + message.content.data.targetUserDisplayNames[0];
+				obj.content = message.content.data.operatorNickname + message.content.message + message.content.data.targetUserDisplayNames[0];
 				obj.type= {
 					special: 'out'
 				};
+				console.log(obj);
 				if(message.conversationType == 1){
 					Msg = store.state.msg_friends;
 				}else{
@@ -218,9 +219,15 @@ export default {
 				}
 				break;
 			/*提示条通知消息*/
-			case RongIMClient.MessageType.InfoNtf:
+			case RongIMClient.MessageType.InformationNotificationMessage:
 				console.log(message);
-			break;
+				console.log("提示条消息")
+				break;
+			/**公众服务命令消息*/
+			case RongIMClient.MessageType.PublicServiceCommandMessage:
+				console.log(message);
+				console.log("公众服务命令消息")
+				break;
 			default:
 			  // do something...
 			  console.log("其它消息")

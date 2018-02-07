@@ -2,6 +2,7 @@ import vuexDatas from '../store/index'
 import hande_state from './handle-state.js'
 import api from '../api/index.js'
 import { Message } from 'element-ui'
+import autoBottom from '../utils/autoBottom.js'
 
 export default {
 	sendTextMsg:(data)=>{
@@ -113,7 +114,7 @@ function sendSuccessMessage(conversationtype, targetId, msg){
 	      	}else{
 	      		hande_state.checkGroupMsg(message);
 	      	}
-	      	// scroll.setScrollBottom(".msg_list");
+	      	autoBottom.autoBottom(document.querySelector(".message-content"))
 	       
 	    },
 	    onError: function (errorCode,message) {

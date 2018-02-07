@@ -15,7 +15,7 @@
 		</div>
 		<!-- 加群提示 -->
 		<div class="add-group" v-else>
-			<strong>巴扎黑</strong>&nbsp;&nbsp;&nbsp;&nbsp;加入了本群
+			{{ chatlist.content }}
 		</div>
 
 	</div>

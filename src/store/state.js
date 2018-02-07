@@ -22,5 +22,7 @@ export default {
 	/*抢红包界面*/
 	bagStatusView:'',
 	/*emoji界面*/
-	emojiView:false
+	emojiView:false,
+	/*保存当前用户的所有消息*/
+	messages:[]
 }
