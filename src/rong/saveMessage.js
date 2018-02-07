@@ -17,17 +17,18 @@ export default {
 		}else{
 			let storeStatus = false;
 			let MessageStore = store.state.messages;
-			for(let i =0, len =store.state.messages.length; i <len; i++){
-
+			for(let i =0, len =MessageStore.length; i <len; i++){
+				console.log(MessageStore[i].type)
+				console.log(MessageStore[i].targetId)
 				if(message.conversationType == MessageStore[i].type && message.targetId == MessageStore[i].targetId){
 					MessageStore[i].data.push(sortMessage(message));
 					storeStatus = true;
 				}
 			}
 			if(!storeStatus){
-				updateMessage.push(create(message))
+				MessageStore.push(create(message))
 			}
-			updateMessage.push(MessageStore)
+			updateMessage = MessageStore;
 
 		}
 		store.commit("saveChatMessage", updateMessage);
@@ -40,7 +41,7 @@ function create(message){
 	messages.targetId = message.targetId
 	messages.data   = [];
 	messages.data.push(sortMessage(message))
-
+	console.log(messages);
 	return messages;
 }
 
