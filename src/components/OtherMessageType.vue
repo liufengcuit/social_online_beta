@@ -11,27 +11,27 @@
 				>
 				<template>
 				<div style="padding:10px">
-				<p class="content_img"><img :src="messages.head_img"></p>
-				<p><strong>姓名：</strong>{{ messages.username }}</p>
-				<p><strong>ID：</strong>{{ messages.id }}</p>
+				<p class="content_img"><img :src="messages.data.portrait"></p>
+				<p><strong>姓名：</strong>{{ messages.data.username }}</p>
+				<p><strong>ID：</strong>{{ messages.data.id }}</p>
 				<p><strong>红包余额：</strong><i v-if="withdraw < 0" class="el-icon-loading"></i><span v-else v-text="withdraw"></span> ¥</p>
 				</div>
 				</template>
 				<span class="img" slot="reference">
-					<img :src="messages.head_img" alt="">
+					<img :src="messages.data.portrait" alt="">
 				</span>
 			</el-popover>
-			<span class="username">{{ messages.username }}</span>
-			<span class="time">{{ messages.post_time | formatDate(messages.post_time) }}</span>
+			<span class="username">{{ messages.data.username }}</span>
+			<span class="time">{{ messages.data.time | formatDate(messages.data.time) }}</span>
 		</div>
 		<!-- 普通文字显示方式 -->
-		<div class="message-content" v-if="messages.msg_type == 'text'" v-html="messages.content"></div>
+		<div class="message-content" v-if="messages.type == 'text'" v-html="messages.data.content"></div>
 		<!-- 图片消息显示方式 -->
-		<div class="message-image" v-else-if="messages.msg_type == 'image'">
-			<img @click="previewImage()" :src="messages.content" alt="">
+		<div class="message-image" v-else-if="messages.type == 'image'">
+			<img @click="previewImage()" :src="messages.data.content" alt="">
 		</div>
 		<!-- 红包消息显示方式 -->
-		<div class="message-bag" v-else-if="messages.msg_type == 'redbag'">
+		<div class="message-bag" v-else-if="messages.type == 'redbag'">
 			<bag-style :bags="messages"></bag-style>
 		</div>
 	</div>

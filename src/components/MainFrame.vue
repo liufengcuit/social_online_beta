@@ -43,20 +43,16 @@
 			<div class="tabs">
 				<!-- 底部菜单选择 -->
 				<div class="tab-bottom flex">
-					<span class="flex-1" @click="changeTab('1')" :class="{'select-tab': tabIndex==1}">会话</span>
-					<span class="flex-1" @click="changeTab('2')" :class="{'select-tab': tabIndex==2}">群</span>
-					<span class="flex-1" @click="changeTab('3')" :class="{'select-tab': tabIndex==3}">好友</span>
+					<span class="flex-1" @click="changeTab('1')" :class="{'select-tab': tabIndex==1}">群</span>
+					<span class="flex-1" @click="changeTab('2')" :class="{'select-tab': tabIndex==2}">好友</span>
 				</div>
 			</div>
 			<!-- 列表 -->
 			<div class="tab-lists">
-				<div class="tab-list tab-1" v-show="tabIndex ==1">
-					<session-lists></session-lists>
-				</div>
-				<div class="tab-list tab-2" v-show="tabIndex ==2">
+				<div class="tab-list tab-2" v-show="tabIndex ==1">
 					<contacts-lists></contacts-lists>
 				</div>
-				<div class="tab-list tab-3" v-show="tabIndex ==3">
+				<div class="tab-list tab-3" v-show="tabIndex ==2">
 					<friends-list :contacts="friends"></friends-list>
 				</div>
 			</div>

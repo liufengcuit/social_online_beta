@@ -1,13 +1,12 @@
 import vuexDatas from '../store/index'
-import hande_state from './handle-state.js'
 import api from '../api/index.js'
 import { Message } from 'element-ui'
 import autoBottom from '../utils/autoBottom.js'
+import saveMessage from './saveMessage.js'
 
 export default {
 	sendTextMsg:(data)=>{
 		var msg;
-		console.log(data);
 		var curr_chat_type = vuexDatas.state.curr_chat_type;
 		var targetId;
 		var curr_chat;
@@ -28,7 +27,6 @@ export default {
 					}
 				});
 		//发送消息
-		console.log(curr_chat_type, targetId, msg)
 		sendSuccessMessage(curr_chat_type, targetId, msg);
 	},
 	sendImageMsg(){
@@ -107,13 +105,7 @@ function sendSuccessMessage(conversationtype, targetId, msg){
 	RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
 	    onSuccess: function (message) {
 	    	console.log("Send successfully");
-	    	console.log(message)
-	    	if(message.messageType=="TextMessage"){
-	      		message.content.content = RongIMLib.RongIMEmoji.emojiToHTML(message.content.content)
-	      		hande_state.checkGroupMsg(message);
-	      	}else{
-	      		hande_state.checkGroupMsg(message);
-	      	}
+	    	saveMessage.save(message);
 	      	autoBottom.autoBottom(document.querySelector(".message-content"))
 	       
 	    },
@@ -142,7 +134,6 @@ function sendSuccessMessage(conversationtype, targetId, msg){
 	                info = '发生了其它错误';
 	                break;
 	        }
-	        // alert(info);
 	        Message.error(info)
 	        
 	        console.log('发送失败:' + info);

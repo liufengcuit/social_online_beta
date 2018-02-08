@@ -15,6 +15,7 @@
 				<p class="session-time">{{ sessionList.time }}</p>
 				<span class="session-unread" v-if="sessionList.num != 0">{{ sessionList.num }}</span>
 		</div>
+		{{ sessions }}
 	</div>
 </template>
 <script>
@@ -53,6 +54,23 @@
 						num:'10+'
 					}
 				]
+			}
+		},
+		computed:{
+			sessions(){
+				let data = []
+				let result = this.$store.state.messages;
+				for(let i=0, len= result.length; i<len; i++){
+					let obj = {}
+					console.log(result[i])
+					obj.targetId = result[i].targetId;
+					obj.type = result[i].type;
+					obj.time = result[i].data[result[i].data.length-1].data.time
+					console.log(obj);
+					data.push(obj);
+				}
+				console.log(data);
+				return data;
 			}
 		},
 		methods:{

@@ -1,6 +1,6 @@
 <template>
 	<div class="bag-style">
-		<div class="redbag" @click="open(bags.content)">
+		<div class="redbag" @click="open(bags.data.content)">
 			<div class="redbag-top">
 				<div class="bag">
 					<div class="top"></div>
@@ -9,7 +9,7 @@
 				</div>
 				<!-- 内容 -->
 				<div class="content-bag">
-					<p class="title">{{ bags.content.des }}</p>
+					<p class="title">{{ bags.data.content.des }}</p>
 					<p class="info">领取红包</p>
 				</div>
 			</div>

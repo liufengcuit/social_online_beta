@@ -1,6 +1,6 @@
 <template>
 	<div class="contact-lists">
-		<!-- 快速搜索好友 -->
+		<!-- 快速搜索群 -->
 		<div class="fastSearch">
 			<input type="text" placeholder="快速搜索 ID/名字" @keyup="fastSearch()" v-model="searchValue" @blur="removeSearchValue()">
 			<i class="el-icon-search"></i>
@@ -18,6 +18,7 @@
 				</div>
 				<p class="contact-name">{{ contact.name }}</p>
 				<p class="contact-id">&lt;&nbsp;{{ contact.group_id }}&nbsp;&gt;</p>
+				<span :class="{badge: contact.status == true}"></span>
 			</div>
 		</div>
 	</div>
@@ -50,6 +51,13 @@
 				this.$router.push("/group");
 				this.$store.commit("set_active_group", contact);
 				this.$store.commit("setCurrChatType", 3)
+				let groups = this.$store.state.groups;
+				for(var i=0, len=groups.length; i<len; i++){
+					if(groups[i].group_id == contact.group_id){
+						groups[i].status = false;
+					}
+				}
+				this.$store.commit("setGroups", groups);
 			},
 			fastSearch(){
 				console.log(this.contacts)
@@ -144,5 +152,17 @@
     ::-webkit-scrollbar-button{
         height: 5px;
         background-color: #B0AEDA;
+    }
+    .badge{
+    	display: inline-block;
+    	transform: scale(.9);
+    	width: 8px;
+    	color: #fff;
+    	height: 8px;
+    	background-color: #ff0000;
+    	border-radius: 50%;
+    	position: absolute;
+    	left:  150px;
+    	top: 35px;
     }
 </style>

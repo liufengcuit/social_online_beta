@@ -6,7 +6,6 @@ import store from '../store/index'
 */
 export default {
 	save(message){
-		console.log(message)
 		/*
 		*判断有无消息
 		*/
@@ -18,8 +17,6 @@ export default {
 			let storeStatus = false;
 			let MessageStore = store.state.messages;
 			for(let i =0, len =MessageStore.length; i <len; i++){
-				console.log(MessageStore[i].type)
-				console.log(MessageStore[i].targetId)
 				if(message.conversationType == MessageStore[i].type && message.targetId == MessageStore[i].targetId){
 					MessageStore[i].data.push(sortMessage(message));
 					storeStatus = true;
@@ -32,6 +29,8 @@ export default {
 
 		}
 		store.commit("saveChatMessage", updateMessage);
+		console.log(message);
+		newMessageTips(message.targetId, message.conversationType)
 	}
 }
 
@@ -41,7 +40,6 @@ function create(message){
 	messages.targetId = message.targetId
 	messages.data   = [];
 	messages.data.push(sortMessage(message))
-	console.log(messages);
 	return messages;
 }
 
@@ -91,10 +89,10 @@ function sortMessage(message){
 			content.type = 'image'
 			content.data = {
 					id:           message.content.id,
-					portrait:     message.content.message.portraitUri,
-					username:     message.content.message.name,
+					portrait:     message.content.portraitUri,
+					username:     message.content.name,
 					time:         message.sentTime.toString().substring(0,10),
-					content:      message.content.message.url
+					content:      message.content.url
 			}
 			console.log('GifMessage')
 			break;
@@ -102,7 +100,7 @@ function sortMessage(message){
 		case RongIMClient.MessageType.RedTips:
 			content.type = 'redtips'
 			content.data = {
-					content:          redTips(message.content)
+					content:      redTips(message.content)
 			}
 			console.log(content);
 			console.log('RedTips')
@@ -143,7 +141,7 @@ function redTips(params){
 	let result = '';
 	let loginId = store.state.login_user.id
 
-	if(params.senduid == params.getuid && loginId == params.senduid){
+	if(params.senduid != params.getuid && loginId == params.senduid){
 		result = `${params.getname}领取了你的红包`
 
 	}else if(params.senduid == loginId && params.getuid == loginId){
@@ -152,7 +150,7 @@ function redTips(params){
 	}else if(params.getuid == loginId && loginId != params.senduid){
 		result = `你领取了${params.sendname}的红包`
 
-	}else if(params.getuid != params.senduid && params.getuid !=loginId){
+	}else if(params.getuid != loginId && params.senduid != params.getuid){
 		result = `${params.getname}领取了${params.sendname}的红包`
 
 	}else{
@@ -160,7 +158,37 @@ function redTips(params){
 
 	}
 	if(params.over){
-		result += `，<b>红包已被领完</b>`
+		result += `，<b style="color: #c1ff1d">红包已被领完</b>`
 	}
 	return result;
+}
+
+function newMessageTips(targetId, conversationType){
+	let state;
+	let result = [];
+	switch(conversationType){
+		case 1:
+			state = store.state.friends
+			for(let i=0, len=state.length; i<len; i++){
+				if(targetId == state[i].id && targetId != store.state.active_friend.id){
+					state[i].status = true
+				}
+				result.push(state[i])
+			}
+			store.dispatch("updateFriendTips", result)
+		break;
+		case 3:
+			state = store.state.groups;
+			for(let i=0, len=state.length; i<len; i++){
+				let obj = {};
+				if(targetId == state[i].group_id && targetId != store.state.active_group.group_id){
+					state[i].status = true
+				}
+				result.push(state[i])
+			}
+			store.dispatch("updateGroupTips", result)
+		break;
+		default :
+		break;
+	}
 }

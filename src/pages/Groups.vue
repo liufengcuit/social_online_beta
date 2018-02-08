@@ -11,8 +11,8 @@
 				<!-- 消息展示区 -->
 				<div class="message-content">
 					<div v-for="(msg,$index) in groupMessages" :key="$index">
-						<other-message-type :messages="msg" v-if="msg.id != loginId && msg.type == undefined"></other-message-type>
-						<self-message-type :messages="msg" v-else-if="msg.id == loginId && msg.type == undefined"></self-message-type>
+						<other-message-type :messages="msg" v-if="msg.data.id != undefined && msg.data.id != loginId "></other-message-type>
+						<self-message-type :messages="msg" v-else-if="msg.data.id != undefined && msg.data.id == loginId"></self-message-type>
 						<special-message :chatlist="msg" v-else></special-message>
 					</div>
 				</div>
@@ -111,11 +111,10 @@
 				return this.$store.state.bagStatus;
 			},
 			groupMessages(){
-				let result = this.$store.state.msg_group
-				for(var i=0,len=result.length; i<len; i++){
+				let result = this.$store.state.messages;
+				for(let i=0,len=result.length; i<len; i++){
 					if(result[i].targetId == this.$store.state.active_group.group_id){
-						console.log(result[i].result)
-						return result[i].result;
+						return result[i].data;
 					}
 				}
 				return {};

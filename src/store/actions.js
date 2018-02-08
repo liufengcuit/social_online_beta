@@ -10,5 +10,11 @@ export default {
 		context.commit("set_msg_group", [])
 		context.commit("setBagStatusView", '')
 		context.commit("setEmojiView", false)
+	},
+	updateGroupTips(context, payload){
+		context.commit("setGroups",payload)
+	},
+	updateFriendTips(context, payload){
+		context.commit("setFriends", payload)
 	}
 }
