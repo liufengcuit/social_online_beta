@@ -28,14 +28,14 @@
 				<p class="tools flex">
 					<span class="flex-1">
 						新消息：
-						<el-badge :value="nums" class="items" >
-							<i class="el-icon-bell" @click="openApplyMsg=true"></i>
+						<el-badge :value="nums" class="items">
+							<i class="el-icon-bell" @click="handleCurrentChange(1), openApplyMsg=true"></i>
 						</el-badge>
 					</span>
 					<span class="flex-1">
 						查找：
 						<el-badge class="items" >
-							<i class="el-icon-search" @click="searchFriend(); openlists=true"></i>
+							<i class="el-icon-search" @click="searchFriend(); openList=true"></i>
 						</el-badge>
 					</span>
 				</p>
@@ -58,12 +58,106 @@
 			</div>
 		</div>
 		<div class="panel">
-			<router-view />
+			<keep-alive>
+				<router-view class="animated slideInRight"></router-view>
+			</keep-alive>
 		</div>
+
+		<!-- 好友申请消息列表 -->
+		<el-dialog title="好友申请" :visible.sync="openApplyMsg">
+			<el-table :data="apply_msg"
+				v-loading="loading_apply"
+			    element-loading-text="拼命加载中"
+			    element-loading-spinner="el-icon-loading"
+			    element-loading-background="rgba(255, 255, 255, 0.5)"
+			>
+				<el-table-column label="头像" width="70">
+					<template slot-scope="scope">
+						<img :src="scope.row.avatar" alt="" class="apply_head_img">
+					</template>
+				</el-table-column>
+				<el-table-column property="name" label="名字" width="100"></el-table-column>
+				<el-table-column property="content" label="邀请内容" width="150"></el-table-column>
+				<el-table-column label="操作">
+					<template slot-scope="scope">
+						
+						<slot v-if="scope.row.result == 0">
+							<el-button
+								size="mini"
+								@click="agree(scope.row.id,scope.row.apply_type)">同意</el-button>
+							<el-button
+								size="mini"
+								type="danger"
+								@click="refuse(scope.row.id,scope.row.apply_type)">拒绝</el-button>
+						</slot>
+						<slot v-if="scope.row.result == 1">
+							已通过
+						</slot>
+						<slot v-if="scope.row.result == 2">
+							已拒绝
+						</slot>
+						<slot v-if="scope.row.result == 3">
+							已超时
+						</slot>
+						
+					</template>
+				</el-table-column>
+			</el-table>
+			<el-pagination
+				prev-text="上一页"
+				next-text="下一页"
+				background
+					@current-change="handleCurrentChange"
+					class="more_apply"
+					:page-size="5"
+				>
+			</el-pagination>
+		</el-dialog>
+
+		<!-- 查找好友 -->
+		<el-dialog title="查找好友" :visible.sync="openList">
+			<el-table :data="apply_msg"
+				v-loading="loading_apply"
+			    element-loading-text="拼命加载中"
+			    element-loading-spinner="el-icon-loading"
+			    element-loading-background="rgba(255, 255, 255, 0.5)"
+			>
+				<el-table-column label="头像" width="70">
+					<template slot-scope="scope">
+						<img :src="scope.row.avatar" alt="" class="apply_head_img">
+					</template>
+				</el-table-column>
+				<el-table-column property="name" label="名字" width="100"></el-table-column>
+				<el-table-column property="content" label="邀请内容" width="150"></el-table-column>
+				<el-table-column label="操作">
+					<template slot-scope="scope">
+						
+						<slot v-if="scope.row.result == 0">
+							<el-button
+								size="mini"
+								@click="agree(scope.row.id,scope.row.apply_type)">同意</el-button>
+							<el-button
+								size="mini"
+								type="danger"
+								@click="refuse(scope.row.id,scope.row.apply_type)">拒绝</el-button>
+						</slot>
+						<slot v-if="scope.row.result == 1">
+							已通过
+						</slot>
+						<slot v-if="scope.row.result == 2">
+							已拒绝
+						</slot>
+						<slot v-if="scope.row.result == 3">
+							已超时
+						</slot>
+						
+					</template>
+				</el-table-column>
+			</el-table>
+		</el-dialog>
 	</div>
 </template>
 <script>
-	import sessionLists from "./SessionLists.vue"
 	import ContactsLists from "./ContactsLists.vue"
 	import FriendsList from "./FriendsList.vue"
 
@@ -79,9 +173,11 @@
 			return {
 				nums:0,
 				openApplyMsg:false,
-				openlists:false,
 				tabIndex:1,
-				withdraw:''
+				withdraw:'',
+				loading_apply:false,
+				apply_msg:[],
+				openList:false
 			}
 		},
 		computed:{
@@ -109,10 +205,114 @@
 				}).then(result => {
 					this.withdraw = result.data;
 				})
+			},
+			// 获取好友请求
+			handleCurrentChange(val){
+				this.loading_apply = true;
+				this.$api.trumpet({
+					token:this.$store.state.login_user.token,
+					cur_page:val
+				}).then(response => {
+					this.loading_apply = false;
+					this.apply_msg = response.data;
+				})
+			},
+			/*同意*/
+			agree(id, apply_type){
+				this.loading_apply = true;
+				let token = this.$store.state.login_user.token;
+				let params = {
+					id:id,
+					token:token
+				}
+				switch(apply_type){
+					case 1:
+						//好友
+						this.$api.passFriend(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					case 2:
+						//申请加入聊吧
+						this.$api.passGroup(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					case 3:
+						//邀请加入聊吧
+						this.$api.passInviteGroup(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					default:
+						this.loading_apply = false;
+					break;
+				}
+			},
+			/*拒绝*/
+			refuse(id,apply_type){
+				this.loading_apply = true;
+				let token = this.$store.state.login_user.token;
+				let params = {
+					id:id,
+					token:token
+				}
+				switch(apply_type){
+					case 1:
+						//拒绝好友
+						this.$api.rejectFriend(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					case 2:
+						//申请加入聊吧
+						this.$api.rejectGroup(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					case 3:
+						//邀请加入聊吧
+						this.$api.rejectInviteGroup(params).then(response => {
+							this.$notify.info({
+								title: '消息提示',
+								message: response.msg
+							});
+							this.openApplyMsg = false;
+							this.loading_apply = false;
+						})
+					break;
+					default:
+						this.loading_apply = false;
+					break;
+				}
 			}
 		},
 		components:{
-			sessionLists,
 			ContactsLists,
 			FriendsList
 		},

@@ -31,27 +31,6 @@
 						content:'消息内容',
 						time:'17:00',
 						num:12
-					},
-					{
-						img:'http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg',
-						title:'群名称',
-						content:'消息内容可能会很长很长恒昌很长很长',
-						time:'17:00',
-						num:10
-					},
-					{
-						img:'http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg',
-						title:'群名称',
-						content:'消息内容',
-						time:'17:00',
-						num:0
-					},
-					{
-						img:'http://or0r5rpd3.bkt.clouddn.com/group/4dae89f9852c9b3d99603cd5374ca4514569d62d507069c046247addb69a9507.jpg',
-						title:'群名称',
-						content:'消息内容',
-						time:'17:00',
-						num:'10+'
 					}
 				]
 			}

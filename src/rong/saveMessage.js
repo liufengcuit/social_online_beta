@@ -29,7 +29,6 @@ export default {
 
 		}
 		store.commit("saveChatMessage", updateMessage);
-		console.log(message);
 		newMessageTips(message.targetId, message.conversationType)
 	}
 }
@@ -107,6 +106,14 @@ function sortMessage(message){
 			break;
 		//好友申请提示消息ContactNtf
 		case RongIMClient.MessageType.ContactNtf:
+			var value = window.localStorage.getItem("newmsg");
+			if(value=='' || value==undefined || value == null){
+				value = 1;
+			}else{
+				value = JSON.parse(value) + 1
+			}
+			window.localStorage.setItem("newmsg",value);
+			store.commit("set_apply_msg",value);
 			console.log("ContactNtf")
 			break;
 		//群组通知消息

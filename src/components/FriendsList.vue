@@ -8,7 +8,7 @@
 		<div class="lists-content">
 			
 			<div class="ul"
-				v-for="(contact,$index) in groups"
+				v-for="(contact,$index) in friends"
 				:key="$index"
 				@click="changeSelect($index, contact)"
 				:class="{'contact-selected': $index == contactIndex}"
@@ -18,6 +18,7 @@
 				</div>
 				<p class="contact-name">{{ contact.username }}</p>
 				<p class="contact-id">&lt;&nbsp;{{ contact.id }}&nbsp;&gt;</p>
+				<span :class="{badge: contact.status == true}"></span>
 			</div>
 		</div>
 	</div>
@@ -34,7 +35,7 @@
 			}
 		},
 		computed:{
-			groups(){
+			friends(){
 				let result = this.$store.state.friends;
 				if(this.searchValue != ""){
 					this.contacts = result;
@@ -48,10 +49,19 @@
 			changeSelect(index, contact){
 				this.contactIndex = index;
 				this.$store.commit("setCurrChatType",1)
-				console.log(contact)
+				this.$store.commit("set_active_friend", contact)
+				this.$router.push("/privates")
+				let friends = this.$store.state.friends;
+				let result = []
+				for(let i=0, len=friends.length; i<len; i++){
+					if(friends[i].id == contact.id){
+						friends[i].status = false;
+					}
+					result.push(friends[i])
+				}
+				this.$store.commit("setFriends", result);
 			},
 			fastSearch(){
-				console.log(this.contacts)
 				let fastListsArr = []
 				for(var i=0,len=this.contacts.length; i<len; i++){
 					if(this.contacts[i].id.toString().indexOf(this.searchValue) != -1 || this.contacts[i].username.indexOf(this.searchValue) != -1){
@@ -121,4 +131,16 @@
     	box-sizing: border-box;
     	height: 36px;
 	}
+	.badge{
+    	display: inline-block;
+    	transform: scale(.9);
+    	width: 8px;
+    	color: #fff;
+    	height: 8px;
+    	background-color: #ff0000;
+    	border-radius: 50%;
+    	position: absolute;
+    	left:  150px;
+    	top: 35px;
+    }
 </style>

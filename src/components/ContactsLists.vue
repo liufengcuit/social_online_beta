@@ -1,5 +1,12 @@
 <template>
-	<div class="contact-lists">
+	<div
+		class="contact-lists"
+		v-loading="groupsLoading"
+	    element-loading-text="请稍等"
+	    element-loading-spinner="el-icon-loading"
+	    element-loading-background="rgba(255, 255, 255, 0.8)"
+	    style="width: 100%"
+	>
 		<!-- 快速搜索群 -->
 		<div class="fastSearch">
 			<input type="text" placeholder="快速搜索 ID/名字" @keyup="fastSearch()" v-model="searchValue" @blur="removeSearchValue()">
@@ -43,6 +50,9 @@
 				}else{
 					return result
 				}
+			},
+			groupsLoading(){
+				return this.$store.state.groupsLoading
 			}
 		},
 		methods:{
@@ -52,12 +62,14 @@
 				this.$store.commit("set_active_group", contact);
 				this.$store.commit("setCurrChatType", 3)
 				let groups = this.$store.state.groups;
+				let result = [];
 				for(var i=0, len=groups.length; i<len; i++){
 					if(groups[i].group_id == contact.group_id){
 						groups[i].status = false;
 					}
+					result.push(groups[i])
 				}
-				this.$store.commit("setGroups", groups);
+				this.$store.commit("setGroups", result);
 			},
 			fastSearch(){
 				console.log(this.contacts)

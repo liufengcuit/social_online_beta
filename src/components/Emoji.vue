@@ -50,7 +50,6 @@
 				let names = e.target.attributes.name.nodeValue
 				//隐藏表情面板
 				document.querySelector("#textarea").focus();
-				this.$store.commit("setEmojiView",false);
 				this.$emit("show",names);
 			}
 		}
@@ -76,7 +75,7 @@
 		width: 24px;
 		height: 24px;
 		line-height: 24px;
-		background-image: url('http://f2e.cn.ronghub.com/sdk/emoji-48.png');
+		background-image: url('../../static/images/emoji-48.png');
 		background-size: auto 24px;
 		overflow: hidden;
 		vertical-align: middle;

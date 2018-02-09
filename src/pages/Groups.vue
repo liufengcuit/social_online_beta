@@ -1,5 +1,12 @@
 <template>
-	<div class="groups">
+	<div 
+		class="groups"
+		v-loading="groupsLoading"
+	    element-loading-text="列表缓冲中"
+	    element-loading-spinner="el-icon-loading"
+	    element-loading-background="rgba(255, 255, 255, 0.8)"
+	    style="width: 100%"
+	>
 		<div class="top-bar">
 			<h2>{{ group.name }}<small>&lt;{{ group.group_id }}&gt;</small></h2>
 			<p>群简介：{{ group.brief }}</p>
@@ -118,6 +125,9 @@
 					}
 				}
 				return {};
+			},
+			groupsLoading(){
+				return this.$store.state.groupsLoading
 			}
 		},
 		methods:{
@@ -177,6 +187,7 @@
 			},
 			/*获取群组列表成员*/
 			getMembers(group_id){
+				this.$store.commit("setGroupsLoading", true);
 				this.$api.getGroupList({
 					group_id:group_id
 				}).then(result => {
@@ -185,6 +196,15 @@
 					//设置群主ID
 					this.master = result.data[0].id;
 					this.memberTotal = result.data.length;
+
+					this.$store.commit("setGroupsLoading", false);
+				}).catch(error => {
+					console.log(error)
+					this.$notify.error({
+						title: '拉取成员失败',
+						message: error.msg
+					});
+					this.$store.commit("setGroupsLoading", false);
 				})
 			},
 			/*显示红包组件*/
@@ -197,10 +217,10 @@
 				this.textMessage += emojiVal;
 				this.$store.commit("setEmojiView",!this.$store.state.emojiView);
 			},
-			/*先睡表情面板*/
+			/*显示表情面板*/
 			emoji:function(){
 				this.$store.commit("setEmojiView",!this.$store.state.emojiView);
-			},
+			}
 		},
 		components:{
 		  	OtherMessageType,

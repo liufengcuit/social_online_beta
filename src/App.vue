@@ -1,7 +1,7 @@
 <template>
   <div id="app">
   	<top></top>
-	<main-frame v-if="true"></main-frame>
+	<main-frame v-if="mainFrame"></main-frame>
   </div>
 </template>
 
@@ -10,6 +10,14 @@ import Top from './components/Top.vue'
 import MainFrame from './components/MainFrame.vue'
 export default {
   name: 'App',
+  created(){
+    this.$router.push("/")
+  },
+  computed:{
+    mainFrame(){
+      return this.$store.state.mainFrame
+    }
+  },
   components:{
   	Top,
   	MainFrame

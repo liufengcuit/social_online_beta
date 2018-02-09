@@ -15,14 +15,16 @@ export default {
 	active_friend:'',
 	/*创建红包状态*/
 	bagStatus:false,
-	/*群组消息*/
-	msg_group:[],
-	/*好友消息*/
-	msg_friends:[],
 	/*抢红包界面*/
 	bagStatusView:'',
 	/*emoji界面*/
 	emojiView:false,
 	/*保存当前用户的所有消息*/
-	messages:[]
+	messages:[],
+	/*保存加好友消息*/
+	applyMessage:0,
+	/*群组加载动画*/
+	groupsLoading:false,
+	/*设置mainFrame*/
+	mainFrame: false
 }

@@ -21,10 +21,9 @@
 				<!-- 抢到了红包 -->
 				<div v-if="openstatus == 1">
 					<div class="flex king-box" v-for="list in bag_status" :class="{white:list.uid==11}">
-						<div class="flex2 username" :title="list.username">{{ list.username }}</div>
-						<div class="flex1">{{ list.amount }}元</div>
-						<div class="flex1">{{ list.time }}</div>
-						<img src="static/image/king.png" alt="" class="king" title="手气最佳" v-if="list.best == 1">
+						<div class="flex2 username" :title="list.username" :class="{king: list.best == 1}">{{ list.username }}<span v-if="list.best == 1">&lt;&nbsp;运气王&nbsp;&gt;</span></div>
+						<div class="flex1" :class="{king: list.best == 1}">{{ list.amount }}元</div>
+						<div class="flex1" :class="{king: list.best == 1}">{{ list.time }}</div>
 					</div>
 				</div>
 				<!-- 红包已过期 -->
@@ -74,15 +73,6 @@
 	</div>
 </template>
 <script>
-	let bagStatus = [
-		{key:1, value:'拆红包'},
-		{key:2, value:'红包过期了'},
-		{key:3, value:'您已经领取过此红包'},
-		{key:4, value:'手慢了'},
-		{key:5, value:'需要开通会员'},
-		{key:6, value:'需要升级会员'},
-		{key:7, value:'消耗积分'},
-	]
 	export default {
 		name:"OpenBag",
 		data(){
@@ -99,13 +89,7 @@
 		},
 		created(){
 			this.self_id = this.$store.state.login_user.id;
-			console.log(this.bagQualification)
 			this.snatch();
-		},
-		computed:{
-			loadingbag(){
-				// return this.$store.state
-			}
 		},
 		methods:{
 			/*先抢红包*/
@@ -204,7 +188,8 @@
 		.username{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
 
 		.king-box{position: relative;}
-		.king{position: absolute;left: 121px;top: -3px;width: 20px;transform: rotate(20deg);}
+		.king{color: #00ff9c}
+		.king span{color: #ffffff}
 		.white{background: #bbb;color: #f00}
 
 </style>

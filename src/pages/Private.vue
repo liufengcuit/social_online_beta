@@ -1,37 +1,33 @@
 <template>
 	<div class="private">
 		<div class="top-bar">
-			<h2>好友昵称</h2>
-			<p>个人签名：当流星划过天空</p>
+			<h2>{{ activeFriend.username }}</h2>
+			<p>个人签名：{{ activeFriend.motto }}</p>
 			<i class="close el-icon-close" title="关闭"></i>
 		</div>
 		<div class="group-content">
 			<div class="message">
 				<!-- 消息展示区 -->
 				<div class="message-content">
-					<other-message-type :messages="{'type':'redbag'}"></other-message-type>
-					<self-message-type :messages="{'type':'text'}"></self-message-type>
-					<other-message-type :messages="{'type':'text'}"></other-message-type>
-					<self-message-type :messages="{'type':'text'}"></self-message-type>
-					<other-message-type :messages="{'type':'image'}"></other-message-type>
-					<self-message-type :messages="{'type':'redbag'}"></self-message-type>
-					<other-message-type :messages="{'type':'text'}"></other-message-type>
-					<self-message-type :messages="{'type':'image'}"></self-message-type>
-					<other-message-type :messages="{'type':'text'}"></other-message-type>
-					<other-message-type :messages="{'type':'text'}"></other-message-type>
+					<div v-for="(msg,$index) in friendMessage" :key="$index">
+						<other-message-type :messages="msg" v-if="msg.data.id != undefined && msg.data.id != loginUser.id "></other-message-type>
+						<self-message-type :messages="msg" v-else></self-message-type>
+					</div>
 				</div>
 				<!-- 消息发送 -->
 				<div class="message-send">
 					<div class="message-type">
-						<span><i class="iconfont">&#xe621;</i></span>
-						<span><i class="iconfont">&#xe7d5;</i></span>
+						<span>
+							<emoji v-on:show="emojiMsg"></emoji>
+							<i class="iconfont" @click="emoji()">&#xe621;</i>
+						</span>
 						<span class="img_upload">
 							<i class="iconfont">&#xe610;</i>
 							<input type="file" class="file" @change="sendImageMsg()">
 						</span>
 					</div>
-					<textarea id="textarea"></textarea>
-					<span @click="sendMessage()" class="send-message">发送</span>
+					<textarea id="textarea" v-model="textMessage" @keyup.13="sendTextMessage()"></textarea>
+					<span @click="sendTextMessage()" class="send-message">发送</span>
 				</div>
 			</div>
 		</div>
@@ -40,14 +36,70 @@
 <script>
 	import OtherMessageType from '../components/OtherMessageType.vue'
 	import SelfMessageType from '../components/SelfMessageType.vue'
+	import sendMessage from '../rong/sendMessage.js'
+	import Emoji from '../components/Emoji.vue'
+	import { mapState } from 'vuex'
+	import autoBottom from '../utils/autoBottom.js'
 	export default {
 		name: "Private",
 		data() {
-			return {}
+			return {
+				textMessage:''
+			}
+		},
+		created(){
+			if(this.$store.state.login_user == ''){
+				this.$router.push("/");
+			}
+		},
+		computed:{
+			...mapState({
+				activeFriend: state => state.active_friend,
+				loginUser: state => state.login_user
+			}),
+			friendMessage(){
+				let result = this.$store.state.messages;
+				for(let i=0,len=result.length; i<len; i++){
+					if(result[i].targetId == this.activeFriend.id){
+						return result[i].data;
+					}
+				}
+				return {};
+			}
+		},
+		methods:{
+			sendImageMsg(){
+				sendMessage.sendImageMsg();
+			},
+			sendTextMessage(){
+				if(this.textMessage.trim() == ''){
+					this.$message({
+						message: '消息不能为空',
+						type: 'warning'
+					});
+					this.textMessage = '';
+					return false;
+				}
+				sendMessage.sendTextMsg(this.textMessage);
+				this.textMessage = '';
+			},
+			/*表情发送*/
+			emojiMsg:function(emojiVal){
+				this.textMessage += emojiVal;
+				this.$store.commit("setEmojiView",!this.$store.state.emojiView);
+			},
+			/*显示表情面板*/
+			emoji:function(){
+				this.$store.commit("setEmojiView",!this.$store.state.emojiView);
+			}
 		},
 		components:{
 		  	OtherMessageType,
-		  	SelfMessageType
+		  	SelfMessageType,
+		  	Emoji
+		},
+		mounted(){
+			autoBottom.autoBottom(document.querySelector(".message-content"))
 		}
 	}
 </script>

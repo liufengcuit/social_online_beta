@@ -129,6 +129,14 @@ export default {
 	async batchReject(params){
 		return http.get("/v1/trumpet/batch-reject", params)
 	},
+	/*同意邀请加群*/
+	async passInviteGroup(params){
+		return http.get("/v1/trumpet/pass-invite-group", params)
+	},
+	/*拒绝邀请加群*/
+	async rejectInviteGroup(params){
+		return http.get("/v1/trumpet/reject-invite-group", params)
+	},
 
 
 	/*

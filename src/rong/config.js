@@ -1,8 +1,8 @@
 import { Notification } from 'element-ui';
+import { Message } from 'element-ui';
 export default {
 	/*测试服：x18ywvqfxnioc           正式服：x4vkb1qpx25yk */ 
 	login(token){
-		console.log(token)
 		RongIMLib.RongIMClient.init("x18ywvqfxnioc");
 		// 设置连接监听状态 （ status 标识当前连接状态 ）
 		// 连接状态监听器
@@ -17,6 +17,12 @@ export default {
 					break;
 					case RongIMLib.ConnectionStatus.DISCONNECTED:
 						console.log('断开连接');
+						Notification({
+				        	title: '提示',
+				        	type: 'warning',
+				        	message: '断开了连接',
+				        	duration: 0
+				        });
 					break;
 					case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
 						Notification({
@@ -66,9 +72,17 @@ export default {
 		/*获取token，登录当前用户*/
 		RongIMClient.connect(token, {
 			onSuccess: function(userId) {
+				Message({
+					message: `连接成功${userId}`,
+					type: 'success'
+				})
 				console.log("Connect successfully." + userId);
 			},
 			onTokenIncorrect: function() {
+				Message({
+					message: `token无效`,
+					type: 'error'
+				})
 				console.log('token无效');
 			},
 			onError:function(errorCode){
@@ -90,6 +104,12 @@ export default {
 						info = '服务器不可用';
 					break;
 				}
+				Notification({
+		        	title: '提示',
+		        	type:'error',
+		        	message: errorCode,
+		        	duration: 0
+		        });
 				console.log(errorCode);
 			}
 		});

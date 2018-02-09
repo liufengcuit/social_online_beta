@@ -48,17 +48,18 @@ export default {
   },
   methods:{
     changeEcology(){
+      this.$store.commit("setMainFrame", false)
       /*获取机器人*/
       this.$api.getRobots({
         ecology_id:this.value
       }).then(res => {
         this.ecologyRobot = res.data;
         this.$store.commit("setRobots", res.data);
-        console.log(res.data)
       })
     },
     /*使用当前用户登录聊天室*/
     changeUser(value){
+      this.$store.commit("setMainFrame", true)
       let robots = this.$store.state.robots;
       let current;
       for(var i =0, len = robots.length; i < len; i++){
@@ -72,12 +73,21 @@ export default {
       /*登录融云*/
       init.login(current.rong_token);
       message.receiveMessages()
+
+      /*获取群组*/
       this.$api.getGroups({
         uid:value
       }).then( res => {
         this.$store.commit('setGroups',res.data)
         this.$router.push("/")
-        console.log(res);
+      })
+
+      /*获取好友*/
+      this.$api.myFriends({
+        token:this.$store.state.login_user.token
+      }).then(response => {
+        this.$store.commit('setFriends', response.data)
+        this.$router.push("/")
       })
     }
   }

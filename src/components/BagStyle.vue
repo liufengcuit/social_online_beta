@@ -33,7 +33,10 @@
 			open(bags){
 				this.selectBag = bags;
 				if(this.$store.state.bagStatusView){
-					alert("您已经打开了一个红包，请先关闭或领取再点击！");
+					this.$message({
+						message: '您已经打开了一个红包，请先关闭或领取再点击！',
+						type: 'warning'
+					});
 					return false;
 				}
 				this.bagSwitch = true;
