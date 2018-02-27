@@ -140,4 +140,26 @@
         background: -mos-linear-gradient(#23abe2,#607d6e);
         background: linear-gradient(#23abe2,#607d6e);
 	}
+	/*滚动条整体部分,必须要设置*/
+    ::-webkit-scrollbar{
+        width: 10px;
+        height: 10px;
+        background-color: #333;
+    }
+    /*滚动条的轨道*/
+    ::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0,0,0,.3);
+        background-color: #f5f5f5;
+    }
+    /*滚动条的滑块按钮*/
+    ::-webkit-scrollbar-thumb{
+        border-radius: 10px;
+        background-color: #2db7f5;
+        box-shadow: inset 0 0 5px #17d3d5;
+    }
+    /*滚动条的上下两端的按钮*/
+    ::-webkit-scrollbar-button{
+        height: 5px;
+        background-color: #B0AEDA;
+    }
 </style>

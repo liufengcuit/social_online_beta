@@ -187,6 +187,9 @@
 			},
 			/*获取群组列表成员*/
 			getMembers(group_id){
+				if(group_id == undefined){
+					return false;
+				}
 				this.$store.commit("setGroupsLoading", true);
 				this.$api.getGroupList({
 					group_id:group_id

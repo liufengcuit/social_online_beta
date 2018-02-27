@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const host = "http://social.haboai120.com"
-// console.log(axios.defaults)
+// console.log(axios.defaults)http://social.haboai120.com
 /*设置默认请求时间为30s*/
 axios.defaults.timeout = 30000;
 
