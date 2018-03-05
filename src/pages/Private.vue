@@ -22,8 +22,8 @@
 							<i class="iconfont" @click="emoji()">&#xe621;</i>
 						</span>
 						<span class="img_upload">
-							<i class="iconfont">&#xe610;</i>
-							<input type="file" class="file" @change="sendImageMsg()">
+							<i class="iconfont" @click="upload()">&#xe610;</i>
+							<input type="file" @change="sendImageMsg()" id="input">
 						</span>
 					</div>
 					<textarea id="textarea" v-model="textMessage" @keyup.13="sendTextMessage()"></textarea>
@@ -68,6 +68,9 @@
 			}
 		},
 		methods:{
+			upload(){
+				document.querySelector("#input").click();
+			},
 			sendImageMsg(){
 				sendMessage.sendImageMsg();
 			},
