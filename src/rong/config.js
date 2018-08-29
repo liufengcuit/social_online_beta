@@ -1,9 +1,8 @@
 import { Notification } from 'element-ui';
 import { Message } from 'element-ui';
 export default {
-	/*测试服：x18ywvqfxnioc           正式服：x4vkb1qpx25yk */ 
 	login(token){
-		RongIMLib.RongIMClient.init("x18ywvqfxnioc");
+		RongIMLib.RongIMClient.init("");1
 		// 设置连接监听状态 （ status 标识当前连接状态 ）
 		// 连接状态监听器
 		RongIMClient.setConnectionStatusListener({
